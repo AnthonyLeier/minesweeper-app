@@ -18,15 +18,15 @@ const createBoard = (rows, columns) => {
 const spreadMines = (board, minesAmount) => {
 	//Espalha minas no tabuleiro
 	const rows = board.length;
-	const colums = board[0].length;
+	const columns = board[0].length;
 	let minesPlanted = 0;
 
 	while (minesPlanted < minesAmount) {
 		const rowSelected = parseInt(Math.random() * rows, 10);
-		const columnSelected = parseInt(Math.random() * colums, 10);
+		const columnSelected = parseInt(Math.random() * columns, 10);
 
 		if (!board[rowSelected][columnSelected].mined) {
-			board[rowSelected][columnSelected] = true;
+			board[rowSelected][columnSelected].mined = true;
 			minesPlanted++;
 		}
 	}
@@ -76,9 +76,7 @@ const openField = (board, row, column) => {
 		if (field.mined) {
 			field.exploded = true;
 		} else if (safeNeighborhood(board, row, column)) {
-			getNeighbors(board, row, column).forEach(n =>
-				openField(board, n.row, n.column)
-			);
+			getNeighbors(board, row, column).forEach(n =>openField(board, n.row, n.column));
 		} else {
 			const neighbors = getNeighbors(board, row, column);
 			field.nearMines = neighbors.filter(n => n.mined).length;
@@ -92,7 +90,7 @@ const hasExplosion = board => getAllFields(board).filter(field => field.exploded
 
 const pending = field => (field.mined && !field.flagged) || (!field.mined && !field.opened);
 
-const wonGame = board => getAllFields(board).filter(pending).filter(field => field.mined);
+const wonGame = board => getAllFields(board).filter(pending).length === 0;
 
 const showMines = board => getAllFields(board).filter(field => field.mined).forEach(field => (field.opened = true));
 

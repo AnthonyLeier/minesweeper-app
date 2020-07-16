@@ -28,10 +28,10 @@ export default class App extends Component {
 	};
 
 	onOpenField = (row, column) => {
-		const clone = cloneBoard(this.state.board);
-		openField(clone, row, column);
-		const lost = hasExplosion(clone);
-		const won = wonGame(clone);
+		const board = cloneBoard(this.state.board);
+		openField(board, row, column);
+		const lost = hasExplosion(board);
+		const won = wonGame(board);
 
 		if (lost) {
 			showMines(board);
@@ -41,7 +41,7 @@ export default class App extends Component {
 			Alert.alert('Ganhou parabens');
 		}
 
-		this.setState({clone, lost, won});
+		this.setState({board, lost, won});
 	};
 
 	render() {
