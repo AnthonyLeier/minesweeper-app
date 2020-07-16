@@ -3,7 +3,7 @@ import {View, SafeAreaView, StyleSheet, Alert} from 'react-native';
 
 import params from './src/params';
 import Minefield from './src/components/Minefield';
-import {createMinedBoard, cloneBoard, openField, hasExplosion, wonGame, showMines} from './src/engine';
+import {createMinedBoard, cloneBoard, openField, hasExplosion, wonGame, showMines, invertFlag} from './src/engine';
 
 export default class App extends Component {
 	constructor(props) {
@@ -44,14 +44,23 @@ export default class App extends Component {
 		this.setState({board, lost, won});
 	};
 
+	onSelectField = (row, column) => {
+		const board = cloneBoard(this.state.board);
+		invertFlag(board, row, column);
+		const won = wonGame(board);
+
+		if (won) {
+			Alert.alert('Ganhou parabens');
+		}
+
+		this.setState({board, won});
+	};
+
 	render() {
 		return (
 			<SafeAreaView style={styles.container}>
 				<View style={styles.board}>
-					<Minefield
-						board={this.state.board}
-						onOpenField={this.onOpenField}
-					/>
+					<Minefield board={this.state.board} onOpenField={this.onOpenField} onSelectField={this.onSelectField} />
 				</View>
 			</SafeAreaView>
 		);

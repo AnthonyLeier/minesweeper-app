@@ -1,18 +1,22 @@
-const createBoard = (rows, columns) => {	
+const createBoard = (rows, columns) => {
 	//Cria o array responsável pelo tabuleiro
-	return Array(rows).fill(0).map((_, row) => {
-		return Array(columns).fill(0).map((_, column) => {
-			return {
-				row,
-				column,
-				opened: false,
-				flagged: false,
-				mined: false,
-				exploded: false,
-				nearMines: 0,
-			};
+	return Array(rows)
+		.fill(0)
+		.map((_, row) => {
+			return Array(columns)
+				.fill(0)
+				.map((_, column) => {
+					return {
+						row,
+						column,
+						opened: false,
+						flagged: false,
+						mined: false,
+						exploded: false,
+						nearMines: 0,
+					};
+				});
 		});
-	});
 };
 
 const spreadMines = (board, minesAmount) => {
@@ -76,7 +80,7 @@ const openField = (board, row, column) => {
 		if (field.mined) {
 			field.exploded = true;
 		} else if (safeNeighborhood(board, row, column)) {
-			getNeighbors(board, row, column).forEach(n =>openField(board, n.row, n.column));
+			getNeighbors(board, row, column).forEach(n => openField(board, n.row, n.column));
 		} else {
 			const neighbors = getNeighbors(board, row, column);
 			field.nearMines = neighbors.filter(n => n.mined).length;
@@ -85,21 +89,17 @@ const openField = (board, row, column) => {
 };
 
 const getAllFields = board => [].concat(...board);
-
 const hasExplosion = board => getAllFields(board).filter(field => field.exploded).length > 0;
-
 const pending = field => (field.mined && !field.flagged) || (!field.mined && !field.opened);
-
 const wonGame = board => getAllFields(board).filter(pending).length === 0;
+const showMines = board =>
+	getAllFields(board)
+		.filter(field => field.mined)
+		.forEach(field => (field.opened = true));
 
-const showMines = board => getAllFields(board).filter(field => field.mined).forEach(field => (field.opened = true));
-
-
-export {
-	createMinedBoard,
-	cloneBoard,
-	openField,
-	hasExplosion,
-	wonGame,
-	showMines,
+const invertFlag = (board, row, column) => {
+	const field = board[row][column];
+	field.flagged = !field.flagged;
 };
+
+export {createMinedBoard, cloneBoard, openField, hasExplosion, wonGame, showMines, invertFlag};
