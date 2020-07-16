@@ -92,6 +92,7 @@ const getAllFields = board => [].concat(...board);
 const hasExplosion = board => getAllFields(board).filter(field => field.exploded).length > 0;
 const pending = field => (field.mined && !field.flagged) || (!field.mined && !field.opened);
 const wonGame = board => getAllFields(board).filter(pending).length === 0;
+
 const showMines = board =>
 	getAllFields(board)
 		.filter(field => field.mined)
@@ -102,4 +103,6 @@ const invertFlag = (board, row, column) => {
 	field.flagged = !field.flagged;
 };
 
-export {createMinedBoard, cloneBoard, openField, hasExplosion, wonGame, showMines, invertFlag};
+const flagsUsed = board => getAllFields(board).filter(field => field.flagged).length;
+
+export {createMinedBoard, cloneBoard, openField, hasExplosion, wonGame, showMines, invertFlag, flagsUsed};
